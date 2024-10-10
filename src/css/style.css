@@ -187,6 +187,11 @@ button {
 }
 
 /* Start cart list card styles */
+.cart-detail,
+.checkout-form {
+  padding: 0.5em;
+}
+
 .cart-card {
   width: 100%;
   display: grid;
@@ -230,6 +235,42 @@ button {
 
 .total-hide {
   display: none;
+}
+
+/* Checkout */
+.checkout-form fieldset {
+  margin: 10px;
+}
+
+.checkout-form fieldset legend {
+  font-weight: bold;
+  font-size: var(--large-font);
+}
+
+.checkout-form label {
+  font-size: var(--base-font);
+}
+
+.input-box {
+  margin-bottom: 10px;
+  width: 100%;
+  font-size: var(--font-base);
+  /* padding: 5px; */
+}
+
+.order-summary {
+  margin: 20px;
+}
+
+.summary-label {
+  font-weight: bold;
+  margin-right: 10px;
+}
+
+#order-total-label,
+#order-total {
+  font-weight: bold;
+  font-size: 30px;
 }
 
 @media screen and (min-width: 500px) {

@@ -28,9 +28,7 @@ export default class ShoppingCart {
 
     renderCartContents() {
         const cartItems = getLocalStorage(this.key) || [];
-        // const htmlItems = cartItems.map((item) => cartItemTemplate(item));
-        // document.querySelector(this.parentSelector).innerHTML = htmlItems.join("");
-
+        
         renderListWithTemplate(cartItemTemplate, this.parentSelector, cartItems,"afterbegin",true);
         
         // add listeners to the X beside each cart item
@@ -40,7 +38,14 @@ export default class ShoppingCart {
             this.removeCartItem(itemId, this.key);
           });
         });
-        calculateTotal(cartItems);
+        
+        const cartTotals = this.calculateCartTotals()
+
+        const itemCountElement = document.querySelector(".item-count");
+        const totalElement = document.querySelector(".cart-total");
+
+        itemCountElement.innerText = `Items: ${cartTotals.itemCount}`;  
+        totalElement.innerHTML = `Total: $${cartTotals.cartTotal.toFixed(2)}`;
       }
 
       addToCart(prodArray) {
@@ -75,22 +80,16 @@ export default class ShoppingCart {
         this.renderCartContents(); //refresh the items on the page
       }
 
+      calculateCartTotals() {
+        const cartItems = getLocalStorage(this.key) || [];
 
-}
-
-function calculateTotal(cartItems) {
-
-    const itemCountElement = document.querySelector(".item-count");
-    const totalElement = document.querySelector(".cart-total");
-
-    const { totalQty, cartTotal } = cartItems.reduce((total, item) => {
-      total.totalQty += item.quantity;
-      total.cartTotal += item.product.FinalPrice * item.quantity
-      return total;
-    },
-  { totalQty: 0, cartTotal: 0 } //initialize the totals
-);
-    itemCountElement.innerHTML = `Items: ${totalQty}`;  
-    totalElement.innerHTML = `Total: $${cartTotal.toFixed(2)}`;
+        return cartItems.reduce((total, item) => {
+          total.itemCount += item.quantity;
+          total.cartTotal += item.product.FinalPrice * item.quantity
+          return total;
+        },
+      { itemCount: 0, cartTotal: 0 } //initialize the totals
+    );
+      }
 }
    
