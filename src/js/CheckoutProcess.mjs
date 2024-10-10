@@ -1,5 +1,29 @@
 import ShoppingCart from "./ShoppingCart.mjs";
 import { getLocalStorage } from "./utils.mjs";
+import ExternalServices from "./ExternalServices.mjs";
+
+const services = new ExternalServices();
+function formDataToJSON(formElement) {
+  const formData = new FormData(formElement),
+    convertedJSON = {};
+
+  formData.forEach(function (value, key) {
+    convertedJSON[key] = value;
+  });
+
+  return convertedJSON;
+}
+// takes the items currently stored in the cart (localstorage) and returns them in a simplified form.
+function packageItems(items) {
+  // convert the list of products from localStorage to the simpler form required for the checkout process. Array.map would be perfect for this.
+  return items.map(item => ({
+    id: item.product.Id,
+    price: item.product.FinalPrice,
+    name: item.product.Name,
+    quantity: item.quantity,
+    }));
+    
+}
 
 export default class CheckoutProcess {
     constructor(key, outputSelector) {
@@ -56,4 +80,31 @@ export default class CheckoutProcess {
       subTax.innerHTML = `$${this.tax.toFixed(2)}`
       subTotal.innerHTML = `$${this.orderTotal.toFixed(2)}`
     }
+
+    async checkout(form) {
+      
+      // build the data object from the calculated fields, the items in the cart, and the information entered into the form
+      const json = formDataToJSON(form);
+      // add totals, and item details
+      json.orderDate = "2021-01-27T18:18:26.095Z" //new Date();
+      json.orderTotal = "298.91" //this.orderTotal;
+      json.tax = "12" //this.tax;
+      json.shipping = this.shipping;
+      json.items = packageItems(this.list);
+
+      console.log(json);
+      
+      // call the checkout method in our ExternalServices module and send it our data object.
+      try {
+        const res = await services.checkout(json);
+        console.log(res);
+      } catch (err) {
+        console.log(err);
+      }
+        
+      
+    }
   }
+
+    
+  
