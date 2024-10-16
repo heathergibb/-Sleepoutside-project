@@ -273,6 +273,26 @@ button {
   font-size: 30px;
 }
 
+.alert {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: lightcoral;
+  padding: 0 20px;
+  margin: 10px;
+  width: 50%;
+}
+
+.alert span {
+  padding: 10px;
+  margin: 0;
+  cursor: pointer;
+}
+
+.alert p {
+  margin: 0;
+}
+
 @media screen and (min-width: 500px) {
   body {
     max-width: 1080px;

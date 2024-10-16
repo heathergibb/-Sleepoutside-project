@@ -1,5 +1,5 @@
 import ShoppingCart from "./ShoppingCart.mjs";
-import { getLocalStorage } from "./utils.mjs";
+import { getLocalStorage, setLocalStorage, removeAllAlerts, alertMessage } from "./utils.mjs";
 import ExternalServices from "./ExternalServices.mjs";
 
 const services = new ExternalServices();
@@ -82,7 +82,6 @@ export default class CheckoutProcess {
     }
 
     async checkout(form) {
-      
       // build the data object from the calculated fields, the items in the cart, and the information entered into the form
       const json = formDataToJSON(form);
       // add totals, and item details
@@ -92,14 +91,22 @@ export default class CheckoutProcess {
       json.shipping = this.shipping;
       json.items = packageItems(this.list);
 
-      console.log(json);
+      // console.log(json);
       
       // call the checkout method in our ExternalServices module and send it our data object.
       try {
         const res = await services.checkout(json);
         console.log(res);
+        setLocalStorage("addToCart", []);
+        location.assign("/checkout/success.html");
       } catch (err) {
-        console.log(err);
+        removeAllAlerts();
+
+        for (let message in err.message) {
+          alertMessage(err.message[message], true);
+        }
+
+        // console.log(err);
       }
         
       
